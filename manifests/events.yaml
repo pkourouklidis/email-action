@@ -1,0 +1,16 @@
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: email-action-trigger
+  namespace: panoptes
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: org.lowcomote.panoptes.actionExecution.trigger
+      subject: emailAction
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: email-action

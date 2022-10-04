@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: email-action
+  namespace: panoptes
+spec:
+  selector:
+    matchLabels:
+      app: email-action
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: email-action
+    spec:
+      containers:
+      - image: registry.docker.nat.bt.com/panoptes/email-action:latest
+        name: email-action
+        ports:
+        - containerPort: 5000
+        env:
+        - name: brokerEndpoint
+          value: http://broker-ingress.knative-eventing.svc.cluster.local/panoptes/default
+      imagePullSecrets:
+      - name: panoptes-registry-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: email-action
+  namespace: panoptes
+spec:
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: email-action
