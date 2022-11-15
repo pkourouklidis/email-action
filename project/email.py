@@ -1,4 +1,4 @@
-from flask import request, current_app, Blueprint
+from flask import Response, request, current_app, Blueprint
 from cloudevents.http import from_http
 import smtplib
 from email.message import EmailMessage
@@ -21,7 +21,7 @@ def receiveEvent():
     message = "Deployment: {}\nAlgorithm Execution: {}\nLevel: {}\nRaw result: {}".format(
         deployment, algorithmExecution, level, rawResult)
     notifyUser(message, recipient)
-    return "ok"
+    return Response(status=200)
 
 
 def notifyUser(message, recipient):
